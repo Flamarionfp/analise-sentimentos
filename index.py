@@ -1,46 +1,51 @@
-#reviews = [
-#    "O filme foi maravilhoso e os atores excelentes!", 
-#    "O roteiro foi fraco e o filme muito chato",  
-#    "O filme foi bom, mas o final foi decepcionante", 
-#    "A história é interessante"]
-#   ]
+from tractive import removeWordsOfStopWords, bagOfWords
+from resolveSentense import countNegativeWords, countPositiveWords
 
-REVIEW = "O filme foi maravilhoso e os atores excelentes!"
+testRewviews = [
+   "O filme foi maravilhoso e os atores excelentes!", 
+   "O roteiro foi fraco e o filme muito chato",  
+   "O filme foi bom, mas o final foi decepcionante", 
+   "A história é interessante"
+]
 
-def removeSpecialCharacters(text):
-    return "".join(c for c in text if c.isalnum() or c.isspace())
+positiveWords = [
+  'bom',
+  'boa', 
+  'excelente', 
+  'excelentes', 
+  'maravilhoso',
+  'ótimo', 'ótima',
+  'divertido',
+  'incrível'
+]
 
-
-def sanitizeReview(review):
-    reviewLower = review.lower()
-    
-    return removeSpecialCharacters(reviewLower)
-
-
-def tokenizeReview(review):
-    return sanitizeReview(review).split()
-
+negativeWords = [
+  'ruim', 
+  'péssimo', 
+  'péssima', 
+  'horrível',
+  'chato',
+  'terrível', 
+  'fraco',
+  'decepcionante'
+]
 
 stopwords = ['o', 'a', 'os', 'as', 'e', 'de', 'do', 'da', 'foi']
-    
-def removeWordsOfStopWords(reviewArray, stopwords):
-    return
-    
-reviewWithoutStopWrds = removeWordsOfStopWords(tokenizeReview(REVIEW), stopwords)
+  
+def contagemPorArray(reviews):
+    for review in reviews:
+        reviewWithoutStopWrds = removeWordsOfStopWords(review, stopwords)
+        qtyPositiveWords = countPositiveWords(bagOfWords(reviewWithoutStopWrds), positiveWords)
+        qtyNegativeWords = countNegativeWords(bagOfWords(reviewWithoutStopWrds), negativeWords)
 
+        status = '??'
+        if (qtyNegativeWords == qtyPositiveWords):
+            status =  'EM CIMA DO MURO'
+        elif (qtyNegativeWords > qtyPositiveWords):
+            status =  'NEGATIVO'
+        else:
+            status = 'POSITIVO'
+        print(f"Frase: {review}")
+        print(f"Palavras positivas: {qtyPositiveWords}\nPalavras negativas: {qtyNegativeWords}\nResultado: {status}\n")
 
-
-def bagOfWords(words):
-    criticas = [
-        ['filme', 'bom', 'excelente'],
-        ['filme', 'ruim', 'chato'],
-        ['filme', 'bom', 'divertido']
-    ]
-    contagem = {palavra:0 for palavra in words}
-
-    for sublista in criticas:
-        for palavra in sublista:
-            if palavra in contagem:
-                contagem[palavra]+=1;
-    return contagem;
-        
+contagemPorArray(testRewviews)
